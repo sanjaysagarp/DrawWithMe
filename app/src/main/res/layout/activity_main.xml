@@ -5,16 +5,16 @@
     android:layout_height="match_parent"
     tools:context="edu.uw.nerd.drawwithme.MainActivity">
 
-    <!--<view class="edu.uw.nerd.drawwithme.DrawingSurfaceView"-->
-        <!--android:id="@+id/drawingView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--/>-->
-
-    <FrameLayout
-        android:id="@+id/container"
+    <view class="edu.uw.nerd.drawwithme.DrawingSurfaceView"
+        android:id="@+id/drawingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
+    <!--<FrameLayout-->
+        <!--android:id="@+id/container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--/>-->
 
 </RelativeLayout>
