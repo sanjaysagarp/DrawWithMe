@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -51,6 +53,12 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         set.playTogether(yAnim, xAnim);
         set.start();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.draw_menu, menu);
+        return true;    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
