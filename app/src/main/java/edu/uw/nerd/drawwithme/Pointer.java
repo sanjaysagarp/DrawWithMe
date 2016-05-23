@@ -37,6 +37,12 @@ public class Pointer {
         this.cy = cy;
         this.isDown = true;
     }
+    public void setX(float cx){
+        this.cx = cx;
+    }
+    public void setY(float cy){
+        this.cy = cy;
+    }
 
     public float getX(){
         return this.cx;

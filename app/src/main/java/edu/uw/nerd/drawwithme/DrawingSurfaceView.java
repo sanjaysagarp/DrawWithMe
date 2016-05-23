@@ -72,6 +72,8 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         mRunnable.setRunning(true); //turn on the runner
         mThread.start(); //start up the thread when surface is created
 
+        init();
+
     }
 
     @Override
@@ -81,8 +83,6 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             viewWidth = width;
             viewHeight = height;
             bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
-
-//            init();
         }
 
     }
@@ -125,7 +125,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         List<Float> floatList;
         float[] floatArray;
         for(int i = 0; i < drawing.size(); i++) {
-        //for(Line line : drawing) {
+            //for(Line line : drawing) {
 
             floatList = drawing.get(i).getPoints();
             floatArray = new float[floatList.size()];
