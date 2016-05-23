@@ -3,7 +3,6 @@ package edu.uw.nerd.drawwithme;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -22,11 +21,6 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private DrawingRunnable mRunnable; //the code that we'll want to run on a background thread
     private Thread mThread; //the background thread
 
-    private Paint whitePaint; //drawing variables (pre-defined for speed)
-
-    /**
-     * We need to override all the constructors, since we don't know which will be called
-     */
     public DrawingSurfaceView(Context context) {
         this(context, null);
     }
@@ -38,17 +32,11 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public DrawingSurfaceView(Context context, AttributeSet attrs, int defaultStyle) {
         super(context, attrs, defaultStyle);
 
-        viewWidth = 1; viewHeight = 1; //positive defaults; will be replaced when #surfaceChanged() is called
-
-        // register our interest in hearing about changes to our surface
+        viewWidth = 1; viewHeight = 1;
         mHolder = getHolder();
         mHolder.addCallback(this);
 
         mRunnable = new DrawingRunnable();
-
-        //set up drawing variables ahead of timme
-        whitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        whitePaint.setColor(Color.WHITE);
     }
 
     /**
@@ -63,8 +51,6 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
      * Helper method for the "game loop"
      */
     public void update(){
-        //update the "game state" here (move things around, etc.
-
 
 
     }
@@ -77,7 +63,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public void render(Canvas canvas){
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
 
-        canvas.drawColor(Color.rgb(255,255,255)); //purple out the background
+        canvas.drawColor(Color.rgb(255,255,255));
 
     }
 
