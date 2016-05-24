@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         set.playTogether(yAnim, xAnim);
         set.start();
     }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

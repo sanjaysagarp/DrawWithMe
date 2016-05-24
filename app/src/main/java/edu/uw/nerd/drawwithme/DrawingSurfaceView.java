@@ -64,6 +64,8 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public interface getDrawing {
         public ArrayList<Line> getDrawing();
     }
+
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         //create and start the background updating thread
