@@ -11,13 +11,13 @@ import android.view.ViewGroup;
  */
 // In this case, the fragment displays simple text based on the page
 public class InboxFragment extends Fragment {
-    public static final String ARG_PAGE = "ARG_PAGE";
+    public static final String INBOX_PAGE = "INBOX_PAGE";
 
     private int page;
 
     public static InboxFragment newInstance(int page) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt(INBOX_PAGE, page);
         InboxFragment fragment = new InboxFragment();
         fragment.setArguments(args);
         return fragment;
@@ -26,7 +26,7 @@ public class InboxFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt(ARG_PAGE);
+        page = getArguments().getInt(INBOX_PAGE);
     }
 
     @Override
