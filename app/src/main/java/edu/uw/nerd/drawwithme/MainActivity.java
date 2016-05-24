@@ -2,6 +2,9 @@ package edu.uw.nerd.drawwithme;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +13,19 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements DrawingSurfaceView.getDrawing {
     private static final String TAG = "Main";
@@ -25,11 +35,21 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     private GestureDetector detector;
     private ArrayList<Line> drawing;
     private Line tempLine;
+
+    public File dir;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File root = new File(dir, "Draw With Me");
+        if(!root.exists()){
+            root.mkdirs();
+        }
+        dir = root;
 
         view = (DrawingSurfaceView)findViewById(R.id.drawingView);
 
@@ -56,8 +76,63 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.draw_menu, menu);
-        return true;    }
+        inflater.inflate(R.menu.canvas_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_save:
+                saveCanvas();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private Uri drawingUri;
+    //helper method for saving the current drawing
+    private void saveCanvas(){
+        if(isExternalStorageWriteable()){
+            try {
+                Log.v(TAG, "Saving.. hopefully..");
+                String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                File file = new File(dir, "drawing_" + timestamp);
+                file.createNewFile();
+
+                drawingUri = Uri.fromFile(file);
+
+                view.setDrawingCacheEnabled(true);
+                view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                view.layout(0, 0, view.getWidth(), view.getHeight());
+
+                view.buildDrawingCache(true);
+                Bitmap bitmap = view.getDrawingCache();
+
+                FileOutputStream stream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                stream.close();
+            }
+            catch(IOException io){
+                Log.d(TAG, Log.getStackTraceString(io));
+            }
+
+
+            //set image to the picture
+            //imageView.setImageURI(pictureUri);
+        }
+    }
+
+    public boolean isExternalStorageWriteable(){
+        String state = Environment.getExternalStorageState();
+        if(state.equals(Environment.MEDIA_MOUNTED)){
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
