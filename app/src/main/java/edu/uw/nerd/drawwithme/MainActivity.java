@@ -86,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
             case R.id.menu_save:
                 saveCanvas();
                 return true;
+            case R.id.menu_load:
+                File[] current = dir.listFiles();
+                if(current.length != 0){
+                    Log.v(TAG, current[0].getName());
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
                 drawingUri = Uri.fromFile(file);
 
+                //save a screenshot of the SurfaceView
                 view.setDrawingCacheEnabled(true);
                 view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
