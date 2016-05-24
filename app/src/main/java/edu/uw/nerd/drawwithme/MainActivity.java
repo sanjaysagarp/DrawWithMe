@@ -2,7 +2,10 @@ package edu.uw.nerd.drawwithme;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,10 +21,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,7 +95,10 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
             case R.id.menu_load:
                 File[] current = dir.listFiles();
                 if(current.length != 0){
-                    Log.v(TAG, current[0].getName());
+                    Log.v(TAG, current[current.length-1].getName());
+                    ImageView image = (ImageView)findViewById(R.id.test);
+                    image.setImageURI(Uri.parse(current[current.length-1].getAbsolutePath()));
+
                 }
                 return true;
             default:
@@ -111,17 +120,25 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 drawingUri = Uri.fromFile(file);
 
                 //save a screenshot of the SurfaceView
-                view.setDrawingCacheEnabled(true);
-                view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                view.layout(0, 0, view.getWidth(), view.getHeight());
-
-                view.buildDrawingCache(true);
-                Bitmap bitmap = view.getDrawingCache();
-
-                FileOutputStream stream = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                stream.close();
+//                view.setDrawingCacheEnabled(true);
+//                view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//                view.layout(0, 0, view.getWidth(), view.getHeight());
+//
+//                view.buildDrawingCache(true);
+//                Bitmap bitmap = view.getDrawingCache();
+//
+//                FileOutputStream stream = new FileOutputStream(file);
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//                stream.close();
+                Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+                view.draw(new Canvas(bitmap));
+                try {
+                    OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                } catch (IOException e) {
+                    Log.w(TAG, e);
+                }
             }
             catch(IOException io){
                 Log.d(TAG, Log.getStackTraceString(io));
