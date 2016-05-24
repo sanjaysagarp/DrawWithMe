@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements DrawingSurfaceView.getDrawing {
-
     private static final String TAG = "Main";
 
     private DrawingSurfaceView view;
