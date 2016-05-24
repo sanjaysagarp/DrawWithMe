@@ -25,13 +25,13 @@ public class NewDrawingFragment extends Fragment implements SensorEventListener{
 
     private String TAG = "NewDrawingFragment";
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.v(TAG, "New drawing fragment");
-        View rootView = inflater.inflate(R.layout.new_drawing, container, false);
-
-        return rootView;
-    }
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        Log.v(TAG, "New drawing fragment");
+//        View rootView = inflater.inflate(R.layout.new_drawing, container, false);
+//
+//        return rootView;
+//    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
