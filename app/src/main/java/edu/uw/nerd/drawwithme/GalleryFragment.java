@@ -11,15 +11,15 @@ import android.widget.TextView;
  * Created by DANG on 5/23/2016.
  */
 // In this case, the fragment displays simple text based on the page
-public class TabFragment extends Fragment {
+public class GalleryFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private int page;
 
-    public static TabFragment newInstance(int page) {
+    public static GalleryFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        TabFragment fragment = new TabFragment();
+        GalleryFragment fragment = new GalleryFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -33,9 +33,10 @@ public class TabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frag_tab, container, false);
-        TextView textView = (TextView) view;
-        textView.setText("Fragment #" + page);
+        // TODO: need a fragment manager to control what to load
+        // create one for gallery and one for inbox
+        View view = inflater.inflate(R.layout.frag_gallery, container, false);
+
         return view;
     }
 }

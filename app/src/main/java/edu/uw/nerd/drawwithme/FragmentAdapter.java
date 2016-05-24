@@ -30,7 +30,11 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return TabFragment.newInstance(position + 1);
+        if (position == 0) {
+            return GalleryFragment.newInstance(position + 1);
+        } else {
+            return InboxFragment.newInstance(position + 1);
+        }
     }
 
     @Override
