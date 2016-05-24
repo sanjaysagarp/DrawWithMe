@@ -67,13 +67,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         } else {
             dir = (File) savedInstanceState.getSerializable(HomeActivity.FILE_INTENT);
         }
-
-        File root = new File(dir, "Draw With Me");
-        if(!root.exists()){
-            root.mkdirs();
-        }
-        dir = root;
-
+        ///storage/sdcard/Android/data/edu.uw.nerd.drawwithme/files/Pictures/Draw With Me/Draw With Me
         view = (DrawingSurfaceView)findViewById(R.id.drawingView);
 
         detector = new GestureDetector(this, new MyGestureListener());
