@@ -33,7 +33,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return GalleryFragment.newInstance(position + 1);
         } else {
-            return InboxFragment.newInstance(position + 1);
+            return InboxFragment.newInstance(HomeActivity.dir);
         }
     }
 

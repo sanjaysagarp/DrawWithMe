@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     private ArrayList<Line> drawing;
     private Line tempLine;
 
-    public File dir;
+    public static File dir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +50,24 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        Log.v("herp", dir.toString());
+//        dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File root = new File(dir, "Draw With Me");
+//        if(!root.exists()){
+//            root.mkdirs();
+//        }
+//        dir = root;
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                dir = null;
+            } else {
+                dir = (File) extras.get(HomeActivity.FILE_INTENT);
+            }
+        } else {
+            dir = (File) savedInstanceState.getSerializable(HomeActivity.FILE_INTENT);
+        }
+
         File root = new File(dir, "Draw With Me");
         if(!root.exists()){
             root.mkdirs();
