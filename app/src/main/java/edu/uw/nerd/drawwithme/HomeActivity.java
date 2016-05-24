@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
 
-
+        // getexternalstoragepublicdirectory
         dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File root = new File(dir, "Draw With Me");
         if(!root.exists()){

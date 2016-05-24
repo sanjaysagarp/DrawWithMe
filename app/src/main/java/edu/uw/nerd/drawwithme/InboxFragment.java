@@ -21,6 +21,7 @@ import java.io.File;
  */
 // In this case, the fragment displays simple text based on the page
 public class InboxFragment extends Fragment {
+    public static final String TAG = "INBOX_FRAGMENT";
     public static final String INBOX_PAGE = "INBOX_PAGE";
     public static final String DETAIL_INTENT = "DETAIL_INTENT";
 
