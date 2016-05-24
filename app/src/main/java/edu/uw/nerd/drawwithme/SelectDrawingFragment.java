@@ -2,6 +2,8 @@ package edu.uw.nerd.drawwithme;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+
+import java.io.File;
 
 /**
  * Created by sanjaysagar on 5/20/16.
@@ -23,6 +27,8 @@ public class SelectDrawingFragment extends Fragment{
     private ImageButton[] drawings;
 
     private ImageButton createDrawingButton;
+
+    public File dir;
 
     public SelectDrawingFragment(){
         //Leave blank
@@ -46,6 +52,12 @@ public class SelectDrawingFragment extends Fragment{
                 Log.v(TAG, "Create new drawing button pressed!");
             }
         });
+
+        dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Draw With Me");
+        if(dir.exists()){
+            File[] drawings = dir.listFiles();
+            //load up images
+        }
 
         return rootView;
     }
