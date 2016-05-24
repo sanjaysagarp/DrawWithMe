@@ -4,7 +4,13 @@
     <item
         android:id="@+id/menu_save"
         android:title="SAVE"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/menu_load"
+        android:title="LOAD"
+        app:showAsAction="always"
         />
 
     <item
