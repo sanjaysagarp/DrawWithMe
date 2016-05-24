@@ -29,8 +29,10 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public Pointer pointer;
     private Bitmap bmp;
-
-    private Paint defaultPaint;
+    public List<Float> floatList;
+    public float[] floatArray;
+    public Paint defaultPaint;
+    public int defaultBackground;
 
     public getDrawing callback;
     public ArrayList<Line> drawing;
@@ -54,6 +56,8 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
         defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         defaultPaint.setColor(Color.BLACK);
+
+        defaultBackground = Color.rgb(255,255,255);
 
         callback = (getDrawing) context;
 
@@ -118,12 +122,11 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public synchronized void render(Canvas canvas){
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
 
-        canvas.drawColor(Color.rgb(255,255,255)); //white out the background
+        canvas.drawColor(defaultBackground); //white out the background
         //need to redraw all previous points
         drawing = callback.getDrawing();
 //        Log.v(TAG, "drawing: " + drawing);
-        List<Float> floatList;
-        float[] floatArray;
+        //List<Float> floatList;
         for(int i = 0; i < drawing.size(); i++) {
             //for(Line line : drawing) {
 

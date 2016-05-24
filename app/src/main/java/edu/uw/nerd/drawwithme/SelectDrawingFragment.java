@@ -44,13 +44,6 @@ public class SelectDrawingFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "Create new drawing button pressed!");
-
-                //need to navigate to drawing page
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container, new NewDrawingFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
             }
         });
 

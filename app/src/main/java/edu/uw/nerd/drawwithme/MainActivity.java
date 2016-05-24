@@ -2,6 +2,7 @@ package edu.uw.nerd.drawwithme;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.graphics.Paint;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +14,11 @@ import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
+import com.android.colorpicker.ColorPickerDialog;
+import com.android.colorpicker.ColorPickerSwatch;
 
 import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity implements DrawingSurfaceView.getDrawing {
 
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     private GestureDetector detector;
     private ArrayList<Line> drawing;
     private Line tempLine;
+    private int colorLine;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,19 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         AnimatorSet set = new AnimatorSet();
         set.playTogether(yAnim, xAnim);
         set.start();
+
+        View changeColor = findViewById(R.id.pen);
+        View changeBackground = findViewById(R.id.background);
+        changeColor.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showColourPicker(v);
+            }
+        });
+        changeBackground.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                pickBackgroundColor(v);
+            }
+        });
     }
 
     @Override
@@ -114,5 +131,55 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
             //return super.onDown(e);
         }
 
+    }
+
+    public void showColourPicker(View v) {
+        final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
+        colorPickerDialog.initialize(R.string.color_picker_default_title,
+                new int[] {
+                        getResources().getColor(R.color.colorPrimary),
+                        getResources().getColor(R.color.colorPrimaryDark),
+                        getResources().getColor(R.color.colorAccent),
+                        getResources().getColor(R.color.colorBlack),
+                        getResources().getColor(R.color.colorCyan),
+                        getResources().getColor(R.color.colorGold),
+                        getResources().getColor(R.color.colorOrange),
+                        getResources().getColor(R.color.colorGreen)
+                }, colorLine, 3, 2);
+        colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int colour) {
+                view.defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                view.defaultPaint.setColor(colour);
+            }
+        });
+
+        android.app.FragmentManager fm = this.getFragmentManager();
+        colorPickerDialog.show(fm, "colorpicker");
+    }
+
+    public void pickBackgroundColor(View v) {
+        final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
+        colorPickerDialog.initialize(R.string.color_picker_default_title,
+                new int[] {
+                        getResources().getColor(R.color.colorPrimary),
+                        getResources().getColor(R.color.colorPrimaryDark),
+                        getResources().getColor(R.color.colorAccent),
+                        getResources().getColor(R.color.colorBlack),
+                        getResources().getColor(R.color.colorWhite),
+                        getResources().getColor(R.color.colorCyan),
+                        getResources().getColor(R.color.colorGold),
+                        getResources().getColor(R.color.colorOrange),
+                        getResources().getColor(R.color.colorGreen)
+                }, colorLine, 3, 2);
+        colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int colour) {
+                view.defaultBackground = colour;
+            }
+        });
+
+        android.app.FragmentManager fm = this.getFragmentManager();
+        colorPickerDialog.show(fm, "colorpicker");
     }
 }
