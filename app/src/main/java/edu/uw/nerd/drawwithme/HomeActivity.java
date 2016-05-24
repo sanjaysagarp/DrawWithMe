@@ -24,16 +24,6 @@ public class HomeActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-//
-//        Button new_btn = (Button) getActivity().findViewById(R.id.new_draw_btn);
-//        new_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), MainActivity.class);
-//                intent.putExtra("edu.uw.nerd.drawwithme", "New Drawing Initiated");
-//                startActivity(intent);
-//            }
-//        });
     }
 
     public void initiateDraw(View v) {

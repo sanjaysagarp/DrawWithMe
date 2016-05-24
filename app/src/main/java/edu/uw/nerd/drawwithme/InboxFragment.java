@@ -32,8 +32,6 @@ public class InboxFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO: need a fragment manager to control what to load
-        // create one for gallery and one for inbox
         View view = inflater.inflate(R.layout.frag_inbox, container, false);
 
         return view;

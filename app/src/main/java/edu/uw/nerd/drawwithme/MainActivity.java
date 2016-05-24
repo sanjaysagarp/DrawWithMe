@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        Log.v("herp", dir.toString());
         File root = new File(dir, "Draw With Me");
         if(!root.exists()){
             root.mkdirs();
@@ -128,10 +129,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
     public boolean isExternalStorageWriteable(){
         String state = Environment.getExternalStorageState();
-        if(state.equals(Environment.MEDIA_MOUNTED)){
-            return true;
-        }
-        return false;
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 
     @Override

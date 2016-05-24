@@ -37,7 +37,6 @@ public class GalleryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_gallery, container, false);
 
-
         return view;
     }
 }
