@@ -1,6 +1,7 @@
 package edu.uw.nerd.drawwithme;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +22,7 @@ import java.io.File;
 // In this case, the fragment displays simple text based on the page
 public class InboxFragment extends Fragment {
     public static final String INBOX_PAGE = "INBOX_PAGE";
+    public static final String DETAIL_INTENT = "DETAIL_INTENT";
 
     private File dir;
 
@@ -44,9 +46,9 @@ public class InboxFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.frag_inbox, container, false);
         dir = (File) getArguments().getSerializable(INBOX_PAGE);
 
-        GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
+        GridView grid = (GridView) rootView.findViewById(R.id.gridview);
 
-
+        // TODO: ideally should be Uri but issue with DrawingSurfaceView results in temp files...
 //        File root = new File(dir, "draw_received");
 //        if(!root.exists()){
 //            root.mkdirs();
@@ -60,14 +62,17 @@ public class InboxFragment extends Fragment {
 //            uriList[i] = Uri.fromFile(fileList[i]);
 //        }
 
-        Integer[] uriList = {R.drawable.derp, R.drawable.kitty, R.drawable.reply_after_right};
+        final Integer[] uriList = {R.drawable.derp, R.drawable.kitty, R.drawable.reply_after_right};
 
-        gridview.setAdapter(new ImageAdapter(container.getContext(), uriList));
+        grid.setAdapter(new ImageAdapter(container.getContext(), uriList));
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Log.v("TESTING", "lelelel");
+                Log.v("TESTING", "image has been clicked");
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(DETAIL_INTENT, uriList[position]);
+                startActivity(intent);
             }
         });
 
