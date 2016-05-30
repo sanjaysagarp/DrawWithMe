@@ -33,6 +33,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public float[] floatArray;
     public Paint defaultPaint;
     public int defaultBackground;
+    public int width;
 
     public getDrawing callback;
     public ArrayList<Line> drawing;
@@ -55,6 +56,8 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         mRunnable = new DrawingRunnable();
 
         defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        defaultPaint.setStyle(Paint.Style.STROKE);
+        defaultPaint.setStrokeWidth(width);
         defaultPaint.setColor(Color.BLACK);
 
         defaultBackground = Color.rgb(255,255,255);

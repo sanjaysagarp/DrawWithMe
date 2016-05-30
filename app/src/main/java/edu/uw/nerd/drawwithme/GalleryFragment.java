@@ -59,7 +59,7 @@ public class GalleryFragment extends Fragment {
             dir = root;
 
             File[] savedDrawings = dir.listFiles();
-            ImageButton image = (ImageButton)view.findViewById(R.id.image_btn);
+            //ImageButton image = (ImageButton)view.findViewById(R.id.image_btn);
             if(savedDrawings.length != 0){
                 Log.v(TAG, savedDrawings[savedDrawings.length-1].toString());
                 image.setImageURI(Uri.parse(savedDrawings[savedDrawings.length-1].getAbsolutePath()));
