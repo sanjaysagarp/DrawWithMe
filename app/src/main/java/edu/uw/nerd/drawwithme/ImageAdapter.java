@@ -11,11 +11,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.net.URI;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
 //    private Uri[] uriList;
     private Integer[] uriList;
+    private File[] fileList;
+    private String TAG = "ImageAdapter";
 
 //    public ImageAdapter(Context c, Uri[] uriList) {
 //        mContext = c;
@@ -28,8 +31,20 @@ public class ImageAdapter extends BaseAdapter {
 
     }
 
+    public ImageAdapter(Context c, File[] fileList) {
+        mContext = c;
+        this.fileList = fileList;
+
+    }
+
     public int getCount() {
-        return uriList.length;
+        if(uriList!=null) {
+            return uriList.length;
+        }
+        else{
+            Log.v(TAG, "length: " + fileList.length);
+            return fileList.length;
+        }
     }
 
     public Object getItem(int position) {
@@ -54,7 +69,12 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(uriList[position]);
+        if(uriList != null) {
+            imageView.setImageResource(uriList[position]);
+        }
+        else{
+            imageView.setImageURI(Uri.parse(fileList[position].getAbsolutePath()));
+        }
 //        imageView.setImageURI(uriList[position]);
         return imageView;
     }

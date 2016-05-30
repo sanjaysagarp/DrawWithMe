@@ -64,7 +64,10 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
-                dir = null;
+                dir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Draw With Me");
+                if(!dir.exists()){
+                    dir.mkdirs();
+                }
             } else {
                 dir = (File) extras.get(HomeActivity.FILE_INTENT);
             }
@@ -148,23 +151,12 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
                 drawingUri = Uri.fromFile(file);
 
-                //save a screenshot of the SurfaceView
-//                view.setDrawingCacheEnabled(true);
-//                view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-//                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-//                view.layout(0, 0, view.getWidth(), view.getHeight());
-//
-//                view.buildDrawingCache(true);
-//                Bitmap bitmap = view.getDrawingCache();
-//
-//                FileOutputStream stream = new FileOutputStream(file);
-//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//                stream.close();
-                Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-                view.draw(new Canvas(bitmap));
                 try {
+                    Log.v(TAG, "writing using outputstream");
                     OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    Bitmap bmp = view.getBmp();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    out.close();
                 } catch (IOException e) {
                     Log.w(TAG, e);
                 }

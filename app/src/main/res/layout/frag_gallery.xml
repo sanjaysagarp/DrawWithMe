@@ -14,9 +14,20 @@
         android:onClick="initiateDraw"/>
 
 
-    <ImageButton
-        android:id="@+id/image_btn"
-        android:layout_width="150dp"
-        android:layout_height="150dp" />
+    <!--<ImageButton-->
+        <!--android:id="@+id/image_btn"-->
+        <!--android:layout_width="150dp"-->
+        <!--android:layout_height="150dp" />-->
+
+    <GridView
+        android:id="@+id/grid_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        />
 
 </LinearLayout>

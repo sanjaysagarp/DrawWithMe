@@ -16,6 +16,7 @@ public class DetailActivity extends AppCompatActivity {
     public static final String IMAGE_INTENT = "IMAGE INTENT";
 //    private Uri image;
     private Integer image;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +45,29 @@ public class DetailActivity extends AppCompatActivity {
             if(extras == null) {
                 image = null;
             } else {
-                image = (Integer) extras.get(InboxFragment.DETAIL_INTENT);
+                if(extras.get(InboxFragment.DETAIL_INTENT) instanceof Integer) {
+                    image = (Integer) extras.get(InboxFragment.DETAIL_INTENT);
+                }
+                else{
+                    file = (File)extras.get(InboxFragment.DETAIL_INTENT);
+                }
             }
         } else {
-            image = (Integer) savedInstanceState.getSerializable(InboxFragment.DETAIL_INTENT);
+            if(savedInstanceState.getSerializable(InboxFragment.DETAIL_INTENT) instanceof Integer) {
+                image = (Integer) savedInstanceState.getSerializable(InboxFragment.DETAIL_INTENT);
+            }
+            else{
+                file = (File)savedInstanceState.getSerializable(InboxFragment.DETAIL_INTENT);
+            }
         }
 
         ImageView img = (ImageView) findViewById(R.id.drawing_detail);
-        img.setImageResource(image);
+        if(image != null) {
+            img.setImageResource(image);
+        }
+        else{
+            img.setImageURI(Uri.parse(file.getAbsolutePath()));
+        }
 
     }
 

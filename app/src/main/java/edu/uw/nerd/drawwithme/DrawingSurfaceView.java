@@ -173,4 +173,8 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             }
         }
     }
+
+    public Bitmap getBmp(){
+        return bmp;
+    }
 }

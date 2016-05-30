@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -22,8 +24,8 @@ import java.io.File;
 // In this case, the fragment displays simple text based on the page
 public class GalleryFragment extends Fragment {
     public static final String GALLERY_PAGE = "GALLERY_PAGE";
-
     public static final String TAG = "GalleryFragment";
+    public static final String DETAIL_INTENT = "DETAIL_INTENT";
 
     private int page;
 
@@ -59,7 +61,8 @@ public class GalleryFragment extends Fragment {
             File[] savedDrawings = dir.listFiles();
             ImageButton image = (ImageButton)view.findViewById(R.id.image_btn);
             if(savedDrawings.length != 0){
-                image.setImageURI(Uri.parse(savedDrawings[0].getAbsolutePath()));
+                Log.v(TAG, savedDrawings[savedDrawings.length-1].toString());
+                image.setImageURI(Uri.parse(savedDrawings[savedDrawings.length-1].getAbsolutePath()));
             }
             else{
                 image.setBackgroundColor(Color.BLUE);
@@ -72,6 +75,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_gallery, container, false);
+        GridView grid = (GridView)view.findViewById(R.id.grid_gallery);
 
         dir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         dir = new File(dir, "Draw With Me");
@@ -79,7 +83,7 @@ public class GalleryFragment extends Fragment {
             dir.mkdirs();
         }
 
-        File[] savedDrawings = dir.listFiles();
+        final File[] savedDrawings = dir.listFiles();
         ImageButton image = (ImageButton)view.findViewById(R.id.image_btn);
         if(savedDrawings.length != 0){
             Log.v(TAG, savedDrawings[0].toString());
@@ -88,6 +92,20 @@ public class GalleryFragment extends Fragment {
         else{
             image.setBackgroundColor(Color.BLUE);
         }
+
+
+
+        grid.setAdapter(new ImageAdapter(container.getContext(), savedDrawings));
+
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Log.v("TESTING", "image has been clicked");
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(DETAIL_INTENT, savedDrawings[position]);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
