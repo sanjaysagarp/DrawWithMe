@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "166936389592",
+    "firebase_url": "https://drawwithme-6c77e.firebaseio.com",
+    "project_id": "drawwithme-6c77e",
+    "storage_bucket": "drawwithme-6c77e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166936389592:android:4dbb944388ceb46f",
+        "android_client_info": {
+          "package_name": "edu.uw.nerd.drawwithme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "166936389592-1juciq1vh92jf48pqhfu5a06nh22vtr5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCYUY625LkpwDSoaxhno8snxcnnbKIVRU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

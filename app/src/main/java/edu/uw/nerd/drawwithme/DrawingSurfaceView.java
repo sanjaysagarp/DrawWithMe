@@ -87,7 +87,6 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
         synchronized (mHolder) { //synchronized to keep this stuff atomic
             viewWidth = width;
             viewHeight = height;
@@ -130,25 +129,23 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         canvas.drawColor(defaultBackground); //white out the background
         //need to redraw all previous points
         drawing = callback.getDrawing();
-//        Log.v(TAG, "drawing: " + drawing);
-        //List<Float> floatList;
         for(int i = 0; i < drawing.size(); i++) {
-            //for(Line line : drawing) {
 
             floatList = drawing.get(i).getPoints();
             floatArray = new float[floatList.size()];
             for(int j = 0; j < floatArray.length; j++) {
                 floatArray[j] = (floatList.get(j) != null ? floatList.get(j) : Float.NaN);
             }
-            canvas.drawLines(floatArray, defaultPaint);
+            canvas.drawLines(floatArray, drawing.get(i).getPaint());
         }
 
         if(pointer.isDown()) {
             canvas.drawCircle(pointer.cx, pointer.cy, pointer.radius, defaultPaint);
         }
+
     }
 
-    public class DrawingRunnable implements Runnable {
+    public class DrawingRunnable extends Thread implements Runnable {
 
         private boolean isRunning; //whether we're running or not (so we can "stop" the thread)
 
@@ -158,6 +155,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
         public void run() {
             Canvas canvas;
+            Canvas bmc;
             while(isRunning)
             {
                 canvas = null;
@@ -165,13 +163,22 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                     canvas = mHolder.lockCanvas(); //grab the current canvas
                     synchronized (mHolder) {
                         update(); //update the game
-                        render(canvas); //redraw the screen
+                        bmc = new Canvas();
+                        bmc.setBitmap(bmp);
+                        render(bmc); //redraw the screen on the buffer
                     }
                 }
                 finally { //no matter what (even if something goes wrong), make sure to push the drawing so isn't inconsistent
                     if (canvas != null) {
+                        canvas.drawBitmap(bmp, 0, 0, null);
                         mHolder.unlockCanvasAndPost(canvas);
                     }
+                }
+
+                try {
+                    sleep(80); //"refresh rate"
+                } catch (InterruptedException e) {
+                    interrupt();
                 }
             }
         }

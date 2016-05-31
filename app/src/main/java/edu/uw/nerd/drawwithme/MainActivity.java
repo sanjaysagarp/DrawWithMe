@@ -206,6 +206,8 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 view.pointer.isDown = true;
                 view.pointer.setXY(x, y);
                 tempLine.addPoint(view.pointer.cx, view.pointer.cy);
+                tempLine.setColor(view.defaultPaint.getColor());
+                tempLine.setStrokeWidth(view.width);
                 drawing.add(tempLine);
                 return true;
             case MotionEvent.ACTION_POINTER_DOWN:
@@ -226,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 view.pointer.isDown = true;
                 view.pointer.setXY(x, y);
                 tempLine.addPoint(view.pointer.cx, view.pointer.cy);
+                tempLine.setColor(view.defaultPaint.getColor());
+                tempLine.setStrokeWidth(view.width);
                 drawing.add(tempLine);
                 return true;
             default:
