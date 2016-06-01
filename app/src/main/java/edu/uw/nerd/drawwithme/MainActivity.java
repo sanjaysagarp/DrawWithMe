@@ -108,16 +108,15 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
-                dir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Draw With Me");
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
+                checkDir(dir);
             } else {
                 dir = (File) extras.get(HomeActivity.FILE_INTENT);
+                checkDir(dir);
                 backgroundImage = (String)extras.get("URI");
             }
         } else {
             dir = (File) savedInstanceState.getSerializable(HomeActivity.FILE_INTENT);
+            checkDir(dir);
         }
         ///storage/sdcard/Android/data/edu.uw.nerd.drawwithme/files/Pictures/Draw With Me/Draw With Me
         view = (DrawingSurfaceView) findViewById(R.id.drawingView);
@@ -234,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     private void saveCanvas() {
         if (isExternalStorageWriteable()) {
             try {
-                Log.v(TAG, "Saving.. hopefully..");
+                Log.v(TAG, "Saving.. hopefully.." + dir.getAbsolutePath());
                 String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 File file = new File(dir, "drawing_" + timestamp);
                 file.createNewFile();
@@ -396,5 +395,14 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         d.show();
 
 
+    }
+
+    private void checkDir(File dir){
+        if(dir == null){
+            dir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Draw With Me");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        }
     }
 }

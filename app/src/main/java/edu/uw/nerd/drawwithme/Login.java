@@ -28,6 +28,9 @@ public class Login extends BaseActivity implements View.OnClickListener {
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    public static String EMAIL_EXTRA = "EMAIL";
+    public static String PASSWORD_EXTRA = "PASSWORD";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,8 +163,12 @@ public class Login extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.signup:
                 Log.v(TAG, "Signup button clicked");
-                Intent i = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivity(i);
+                    Intent i = new Intent(getApplicationContext(), SignupActivity.class);
+                    if(mEmailField.getText().toString()!=null && mPasswordField.getText().toString()!=null){
+                        i.putExtra(EMAIL_EXTRA,mEmailField.getText().toString());
+                        i.putExtra(PASSWORD_EXTRA, mPasswordField.getText().toString());
+                    }
+                    startActivity(i);
                 break;
             case R.id.signin:
                 signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
