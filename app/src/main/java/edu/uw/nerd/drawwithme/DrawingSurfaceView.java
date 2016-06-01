@@ -2,9 +2,11 @@ package edu.uw.nerd.drawwithme;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -28,12 +30,13 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Thread mThread; //the background thread
 
     public Pointer pointer;
-    private Bitmap bmp;
+    public Bitmap bmp, oldBmp;
     public List<Float> floatList;
     public float[] floatArray;
     public Paint defaultPaint;
     public int defaultBackground;
     public int width;
+    public boolean imageLoaded;
 
     public getDrawing callback;
     public ArrayList<Line> drawing;
@@ -47,12 +50,13 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public DrawingSurfaceView(Context context, AttributeSet attrs, int defaultStyle) {
         super(context, attrs, defaultStyle);
+        imageLoaded = false;
         viewWidth = 1; viewHeight = 1; //positive defaults; will be replaced when #surfaceChanged() is called
 
         // register our interest in hearing about changes to our surface
         mHolder = getHolder();
         mHolder.addCallback(this);
-
+        oldBmp = null;
         mRunnable = new DrawingRunnable();
 
         defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -125,8 +129,12 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public synchronized void render(Canvas canvas){
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
-
-        canvas.drawColor(defaultBackground); //white out the background
+        if(imageLoaded){
+            canvas.drawColor(defaultBackground);
+            canvas.drawBitmap(oldBmp, 0, 0, null);
+        } else {
+            canvas.drawColor(defaultBackground); //white out the background
+        }
         //need to redraw all previous points
         drawing = callback.getDrawing();
         for(int i = 0; i < drawing.size(); i++) {
@@ -186,5 +194,10 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public Bitmap getBmp(){
         return bmp;
+    }
+
+    public void setBmp(Bitmap b) {
+        imageLoaded = true;
+        oldBmp = b;
     }
 }
