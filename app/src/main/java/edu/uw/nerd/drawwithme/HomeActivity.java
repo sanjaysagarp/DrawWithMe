@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // getexternalstoragepublicdirectory
         dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File root = new File(dir, "Draw With Me");
+        File root = new File(dir, "Inbox");
         if(!root.exists()){
             root.mkdirs();
         }
@@ -139,8 +139,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
-
 
 
     }
