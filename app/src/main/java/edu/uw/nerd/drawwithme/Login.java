@@ -49,7 +49,7 @@ public class Login extends BaseActivity implements View.OnClickListener {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-
+                    Toast.makeText(Login.this, "Signed in as " + user.getEmail(), Toast.LENGTH_LONG).show();
                     //go to HomeActivity
                     Intent i = new Intent(getApplicationContext(), HomeActivity.class);
                     startActivity(i);

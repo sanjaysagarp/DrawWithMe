@@ -98,8 +98,9 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         if(backgroundImage!=null) {
             try {
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(new File(backgroundImage)));
-                Drawable drawable = new BitmapDrawable(getResources(), b);
-                view.setBackground(drawable);
+                view.setBmp(b);
+//                Drawable drawable = new BitmapDrawable(getResources(), b);
+//                view.setBackground(drawable);
             }
             catch(FileNotFoundException fe){
                 Log.v(TAG, "File not found");
