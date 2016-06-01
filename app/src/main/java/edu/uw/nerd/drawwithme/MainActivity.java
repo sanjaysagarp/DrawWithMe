@@ -54,6 +54,8 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements DrawingSurfaceView.getDrawing,
@@ -211,12 +213,23 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 //do something with edt.getText().toString();
                 //TODO: NEED TO CHECK IF EMAIL EXISTS IN DB?
                 //TODO: NEED TO UPLOAD TO IMGUR AND SET URL
-                String URL = "";
+                user = FirebaseAuth.getInstance().getCurrentUser();
+
+                String URL = "http://imgur.com/I5yPFUD";
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
+                String recipient = edt.getText().toString();
                 DrawingItem item = new DrawingItem(edt.getText().toString(), user.getEmail(), title.getText().toString(), URL);
 
-                database.getReference().child(edt.getText().toString()).child("Inbox").push(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
-                Toast.makeText(MainActivity.this, "Sent to " + edt.getText().toString(), Toast.LENGTH_LONG).show();
+                //need user id
+                String key = database.getReference().child(recipient).child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
+                Map<String, Object> postValues = item.toMap();
+
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("/"+recipient+"/inbox/"+ key, postValues);
+
+                database.getReference().updateChildren(childUpdates);
+
+                Toast.makeText(MainActivity.this, "Sent to " + recipient, Toast.LENGTH_LONG).show();
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

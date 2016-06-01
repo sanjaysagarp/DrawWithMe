@@ -106,6 +106,8 @@ public class SignupActivity extends BaseActivity implements View.OnClickListener
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
+
+                        
                         if (!task.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();

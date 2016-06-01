@@ -15,7 +15,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5sp"
-            android:text="Enter a title"
+            android:hint="Enter a title"
             android:layout_alignLeft="@+id/edit_recipient"
             android:layout_alignStart="@+id/edit_recipient"/>
 
@@ -24,7 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5sp"
-            android:text="Enter recipient"
+            android:hint="Enter recipient"
             android:layout_below="@+id/title_msg"
             android:layout_centerHorizontal="true"/>
 
