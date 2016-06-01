@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.content.Intent;
@@ -13,12 +14,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,11 +32,16 @@ import android.view.WindowManager;
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -58,18 +67,35 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     private Line tempLine;
     private int colorLine;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+
+    private FirebaseAuth.AuthStateListener mAuthListener;
     public static File dir;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+
+                }
+            }
+        };
 
 //        dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 //        File root = new File(dir, "Draw With Me");
@@ -136,9 +162,6 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 show();
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -164,12 +187,47 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
                 }
                 return true;
+            case R.id.send_btn:
+                //FirebaseDatabase database = FirebaseDatabase.getInstance();
+                showDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
 
+    public void showDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.select_recipient, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText title = (EditText) dialogView.findViewById(R.id.title_msg);
+        final EditText edt = (EditText) dialogView.findViewById(R.id.edit_recipient);
+
+        dialogBuilder.setTitle("Send your image!");
+        dialogBuilder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //do something with edt.getText().toString();
+                //TODO: NEED TO CHECK IF EMAIL EXISTS IN DB?
+                //TODO: NEED TO UPLOAD TO IMGUR AND SET URL
+                String URL = "";
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DrawingItem item = new DrawingItem(edt.getText().toString(), user.getEmail(), title.getText().toString(), URL);
+
+                database.getReference().child(edt.getText().toString()).child("Inbox").push(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
+                Toast.makeText(MainActivity.this, "Sent to " + edt.getText().toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
     private Uri drawingUri;
 
     //helper method for saving the current drawing
@@ -266,41 +324,11 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        client.connect();
-//        Action viewAction = Action.newAction(
-//                Action.TYPE_VIEW, // TODO: choose an action type.
-//                "Main Page", // TODO: Define a title for the content shown.
-//                // TODO: If you have web page content that matches this app activity's content,
-//                // make sure this auto-generated web page URL is correct.
-//                // Otherwise, set the URL to null.
-//                Uri.parse("http://host/path"),
-//                // TODO: Make sure this auto-generated app URL is correct.
-//                Uri.parse("android-app://edu.uw.nerd.drawwithme/http/host/path")
-//        );
-//        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        Action viewAction = Action.newAction(
-//                Action.TYPE_VIEW, // TODO: choose an action type.
-//                "Main Page", // TODO: Define a title for the content shown.
-//                // TODO: If you have web page content that matches this app activity's content,
-//                // make sure this auto-generated web page URL is correct.
-//                // Otherwise, set the URL to null.
-//                Uri.parse("http://host/path"),
-//                // TODO: Make sure this auto-generated app URL is correct.
-//                Uri.parse("android-app://edu.uw.nerd.drawwithme/http/host/path")
-//        );
-//        AppIndex.AppIndexApi.end(client, viewAction);
-//        client.disconnect();
     }
 
     public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
