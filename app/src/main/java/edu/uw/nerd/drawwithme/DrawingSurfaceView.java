@@ -183,11 +183,11 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                     }
                 }
 
-                try {
+                /*try {
                     sleep(80); //"refresh rate"
                 } catch (InterruptedException e) {
                     interrupt();
-                }
+                }*/
             }
         }
     }
