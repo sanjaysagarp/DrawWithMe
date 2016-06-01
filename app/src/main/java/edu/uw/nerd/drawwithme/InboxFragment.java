@@ -65,6 +65,9 @@ public class InboxFragment extends Fragment {
                 args.putSerializable(INBOX_MSG + i, msgs.get(i));
             }
         }
+
+        Log.v(TAG, INBOX_MSG + "0");
+
         InboxFragment fragment = new InboxFragment();
         fragment.setArguments(args);
         return fragment;
@@ -113,7 +116,7 @@ public class InboxFragment extends Fragment {
             try {
                 for (int i = 0; i < params[0].size(); i++) {
                     URL url = new URL(params[0].get(i));
-                    Log.v(TAG, url.toString());
+                    Log.v(TAG, "inside async " + url.toString());
 
                     // attempt to connect to the url
                     urlConnection = (HttpURLConnection) url.openConnection();

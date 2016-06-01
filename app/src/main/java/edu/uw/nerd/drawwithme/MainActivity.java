@@ -228,13 +228,18 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-                String URL = "http://imgur.com/I5yPFUD";
+                String URL = "http://i.imgur.com/I5yPFUD.jpg";
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 String recipient = edt.getText().toString();
                 Log.v(TAG,user.getUid());
 
 
+                // chang here when getting stuffzzzzzzzzzzzzz. put URL
                 DrawingItem item = new DrawingItem(user.getUid(), edt.getText().toString(), title.getText().toString(), URL);
+
+                // getref is top level in database, the url
+                // push is creating new id into the given child(inbox)
+                // getkey returns that input id
 
                 String key = database.getReference().child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
                 Map<String, Object> postValues = item.toMap();
@@ -450,7 +455,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
 
 
-    
+
 
 
 }

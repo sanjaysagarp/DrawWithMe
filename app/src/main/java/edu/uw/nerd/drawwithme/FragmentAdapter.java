@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +41,8 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        newMsg = null;
+        newMsg = new ArrayList<String>();
+
 
         childEventListener = new ChildEventListener() {
             @Override
@@ -90,36 +93,44 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return GalleryFragment.newInstance(position + 1);
         } else {
-
-            //database.getReference().child("inbox").addChildEventListener(childEventListener);
-
-            Query temp = database.getReference().child("inbox")
-                    .orderByChild("recipient")
-                    .equalTo(mAuth.getCurrentUser().getUid());
-
-            temp.addChildEventListener(childEventListener);
-
-            temp.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-                        DrawingItem message = messageSnapshot.getValue(DrawingItem.class);
-                        Log.v(TAG, message.sender);
-                        //TODO: DATA IS RETRIEVED HERE AND NEEDS TO POPULATE INBOX
-
-                        newMsg.add(message.url);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-
-            return InboxFragment.newInstance(HomeActivity.dir, newMsg);
+            Log.v(TAG, HomeActivity.allMsg.toString());
+            return InboxFragment.newInstance(HomeActivity.dir, HomeActivity.allMsg);
         }
+    }
+
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        List<Fragment> fragmentsList = mFragmentManager.getFragments();
+        if (fragmentsList != null && position <= (fragmentsList.size() - 1)) {
+            SampleFragment sampleFragment = (SampleFragment) fragmentsList.get(position);
+            Utils.DummyItem dummyItem = mDummyItems.get(position);
+            //If the current data of the fragment changed, set the new data
+            if (!dummyItem.equals(sampleFragment.getDummyItem())) {
+                sampleFragment.setDummyItem(dummyItem);
+                Log.i(TAG, "********instantiateItem position:" + position + " FragmentDataChanged");
+            }
+        } else {
+            //No fragment instance available for this index, create a new fragment by calling getItem() and show the data.
+            Log.i(TAG, "********instantiateItem position:" + position + " NewFragmentCreated");
+        }
+
+        return super.instantiateItem(container, position);
+    }
+
+
+        return super.instantiateItem(container, position);
+    }
+
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
     }
 
     @Override
