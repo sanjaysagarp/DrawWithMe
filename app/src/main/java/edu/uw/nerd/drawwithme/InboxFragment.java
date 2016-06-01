@@ -155,11 +155,12 @@ public class InboxFragment extends Fragment {
                 try {
                     JSONArray resultParsed = new JSONObject(results).getJSONArray("data");
                     for (int i = 0; i < resultParsed.length(); i++) {
-                        String s = resultParsed.getString(i);
-                        Log.v("I WONDER", s);
-                        if (s.startsWith("link")) {
-                            results = s;
-                        }
+                        JSONObject resultObj = resultParsed.getJSONObject(i);
+
+                        Log.v("I WONDER", resultObj.toString());
+//                        if (s.startsWith("link")) {
+//                            results = s;
+//                        }
 
                     }
                 } catch (JSONException jsonEx) {
