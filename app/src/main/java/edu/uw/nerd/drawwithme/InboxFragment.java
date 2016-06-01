@@ -17,6 +17,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -101,7 +105,7 @@ public class InboxFragment extends Fragment {
 
     private class ImageTask extends AsyncTask<String, Void, List<String>> {
 
-        public static final String CLIENT_ID = " 76c244ffc9d4c9c";
+        public static final String CLIENT_ID = "76c244ffc9d4c9c";
         public static final String CLIENT_SECRET = "8dde9266ec353e305169e658957c68099ec229d2";
 
 
@@ -112,7 +116,6 @@ public class InboxFragment extends Fragment {
             BufferedReader reader = null;
             List<String> images = new ArrayList<String>();
 
-            Log.v("AM I ENTERING THIS?", "LELELEL");
             // need to grab a list of all ID associated with this user............
 
 
@@ -121,13 +124,8 @@ public class InboxFragment extends Fragment {
 
                 // attempt to connect to the url
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoOutput(true);
-                urlConnection.setDoInput(true);
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Authorization", "Client-ID " + CLIENT_ID);
-                urlConnection.setRequestMethod("GET");
-
-                urlConnection.connect();
 
                 int status = urlConnection.getResponseCode();
                 Log.v("STATUS", "" +status);
@@ -154,8 +152,19 @@ public class InboxFragment extends Fragment {
                 }
 
                 String results = buffer.toString();
-                Log.v("TESTING", results);
+                try {
+                    JSONArray resultParsed = new JSONObject(results).getJSONArray("data");
+                    for (int i = 0; i < resultParsed.length(); i++) {
+                        String s = resultParsed.getString(i);
+                        Log.v("I WONDER", s);
+                        if (s.startsWith("link")) {
+                            results = s;
+                        }
 
+                    }
+                } catch (JSONException jsonEx) {
+                    Log.v("ERROR", jsonEx.toString());
+                }
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
