@@ -34,7 +34,12 @@ public class SignupActivity extends BaseActivity implements View.OnClickListener
         mEmailField = (EditText) findViewById(R.id.email);
         mPasswordField = (EditText) findViewById(R.id.password);
 
+        Bundle extras = getIntent().getExtras();
+        mEmailField.setText(extras.getString(Login.EMAIL_EXTRA));
+        mPasswordField.setText(extras.getString(Login.PASSWORD_EXTRA));
+
         findViewById(R.id.signup1).setOnClickListener(this);
+
 
 //        signup.setOnClickListener(new View.OnClickListener() {
 //            @Override
