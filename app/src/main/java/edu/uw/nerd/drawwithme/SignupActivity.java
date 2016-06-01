@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends BaseActivity implements View.OnClickListener {
 
@@ -88,7 +89,7 @@ public class SignupActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(final String email, String password) {
         Log.d(TAG, "createAccount:" + email);
         if (!validateForm()) {
             return;
@@ -102,12 +103,18 @@ public class SignupActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
+                        final String e = email;
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
 
-                        
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        String key = database.getReference().child("users").push().getKey();
+
+                        //User user = new User(e);
+                        //database.getReference().child("users").child(user.getUid()).setValue(user);
+
+
                         if (!task.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -120,6 +127,7 @@ public class SignupActivity extends BaseActivity implements View.OnClickListener
                     }
                 });
         // [END create_user_with_email]
+
     }
 
     private boolean validateForm() {

@@ -35,6 +35,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import android.widget.Button;
 import android.widget.EditText;
@@ -207,18 +208,21 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 //TODO: NEED TO UPLOAD TO IMGUR AND SET URL
                 user = FirebaseAuth.getInstance().getCurrentUser();
 
+
                 String URL = "http://imgur.com/I5yPFUD";
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 String recipient = edt.getText().toString();
-                DrawingItem item = new DrawingItem(edt.getText().toString(), user.getEmail(), title.getText().toString(), URL);
+                Log.v(TAG,user.getUid());
 
-                //need user id
-                String key = database.getReference().child(recipient).child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
+
+                DrawingItem item = new DrawingItem(user.getUid(), edt.getText().toString(), title.getText().toString(), URL);
+
+                String key = database.getReference().child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
                 Map<String, Object> postValues = item.toMap();
 
                 Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/"+recipient+"/inbox/"+ key, postValues);
-
+                childUpdates.put("/inbox/"+ key, postValues);
+//
                 database.getReference().updateChildren(childUpdates);
 
                 Toast.makeText(MainActivity.this, "Sent to " + recipient, Toast.LENGTH_LONG).show();

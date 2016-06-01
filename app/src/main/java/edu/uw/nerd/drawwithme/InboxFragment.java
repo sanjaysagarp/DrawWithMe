@@ -84,6 +84,9 @@ public class InboxFragment extends Fragment {
 //            uriList[i] = Uri.fromFile(fileList[i]);
 //        }
 
+
+
+
         final Integer[] uriList = {R.drawable.derp, R.drawable.kitty, R.drawable.reply_after_right};
 
         grid.setAdapter(new ImageAdapter(container.getContext(), uriList));
