@@ -84,6 +84,7 @@ public class DetailActivity extends AppCompatActivity {
             case R.id.menu_edit:
                 Intent intent = new Intent(DetailActivity.this, MainActivity.class);
                 intent.putExtra(IMAGE_INTENT, image);
+                intent.putExtra("URI", file.getAbsolutePath());
                 startActivity(intent);
                 return true;
             default:

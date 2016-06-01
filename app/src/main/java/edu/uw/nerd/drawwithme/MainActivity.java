@@ -4,10 +4,12 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.FragmentManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -34,6 +36,8 @@ import android.widget.NumberPicker;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 //        }
 //        dir = root;
 
+        String backgroundImage = null;
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
@@ -83,12 +88,24 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 }
             } else {
                 dir = (File) extras.get(HomeActivity.FILE_INTENT);
+                backgroundImage = (String)extras.get("URI");
             }
         } else {
             dir = (File) savedInstanceState.getSerializable(HomeActivity.FILE_INTENT);
         }
         ///storage/sdcard/Android/data/edu.uw.nerd.drawwithme/files/Pictures/Draw With Me/Draw With Me
         view = (DrawingSurfaceView) findViewById(R.id.drawingView);
+        if(backgroundImage!=null) {
+            try {
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(new File(backgroundImage)));
+                Drawable drawable = new BitmapDrawable(getResources(), b);
+                view.setBackground(drawable);
+            }
+            catch(FileNotFoundException fe){
+                Log.v(TAG, "File not found");
+            }
+        }
+
 
         detector = new GestureDetector(this, new MyGestureListener());
         tempLine = new Line();
