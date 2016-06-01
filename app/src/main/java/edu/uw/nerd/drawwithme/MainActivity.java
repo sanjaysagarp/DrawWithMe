@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -86,13 +87,13 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 checkDir(dir);
             } else {
                 dir = (File) extras.get(HomeActivity.FILE_INTENT);
-                checkDir(dir);
                 backgroundImage = (String)extras.get("URI");
             }
         } else {
             dir = (File) savedInstanceState.getSerializable(HomeActivity.FILE_INTENT);
-            checkDir(dir);
         }
+
+        dir = checkDir(dir);
         ///storage/sdcard/Android/data/edu.uw.nerd.drawwithme/files/Pictures/Draw With Me/Draw With Me
         view = (DrawingSurfaceView) findViewById(R.id.drawingView);
         if(backgroundImage!=null) {
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     private void saveCanvas() {
         if (isExternalStorageWriteable()) {
             try {
+                dir = checkDir(dir);
                 Log.v(TAG, "Saving.. hopefully.." + dir.getAbsolutePath());
                 String title = ((EditText)findViewById(R.id.title)).getText().toString();
                 File file;
@@ -200,6 +202,9 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
             //set image to the picture
             //imageView.setImageURI(pictureUri);
         }
+        Toast.makeText(this, "Drawing saved!", Toast.LENGTH_SHORT ).show();
+        Intent i = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(i);
     }
 
     public boolean isExternalStorageWriteable() {
@@ -210,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         x = event.getX();
-        y = event.getY() - getSupportActionBar().getHeight();
+        y = event.getY() - getSupportActionBar().getHeight() - ((EditText)findViewById(R.id.title)).getHeight();
 
         int action = MotionEventCompat.getActionMasked(event);
 
@@ -370,12 +375,11 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
     }
 
-    private void checkDir(File dir){
-        if(dir == null){
-            dir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Draw With Me");
-            if (!dir.exists()) {
-                dir.mkdirs();
+    private File checkDir(File file){
+            file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Draw With Me");
+            if (!file.exists()) {
+                file.mkdirs();
             }
-        }
+        return file;
     }
 }
