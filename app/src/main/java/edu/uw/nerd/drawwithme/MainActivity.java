@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
     private ArrayList<Line> drawing;
     private Line tempLine;
     private int colorLine;
+    private int color;
+    private boolean eDown = false;
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -154,14 +156,31 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
         View changeColor = findViewById(R.id.pen);
         View changeBackground = findViewById(R.id.background);
+        View eraser = findViewById(R.id.eraser);
         changeColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                eDown = false;
                 showColourPicker(v);
             }
         });
         changeBackground.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 show();
+            }
+        });
+        eraser.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(!eDown) {
+                    view.defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    view.defaultPaint.setStyle(Paint.Style.STROKE);
+                    view.defaultPaint.setColor(getResources().getColor(R.color.colorWhite));
+                    eDown = true;
+                } else {
+                    view.defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    view.defaultPaint.setStyle(Paint.Style.STROKE);
+                    view.defaultPaint.setColor(color);
+                    eDown = false;
+                }
             }
         });
     }
@@ -372,6 +391,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
             @Override
             public void onColorSelected(int colour) {
+                color = colour;
                 view.defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 view.defaultPaint.setStyle(Paint.Style.STROKE);
                 view.defaultPaint.setColor(colour);
@@ -391,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         Button b2 = (Button) d.findViewById(R.id.button2);
         final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
         np.setMaxValue(50);
-        np.setMinValue(1);
+        np.setMinValue(3);
         np.setWrapSelectorWheel(false);
         np.setOnValueChangedListener(this);
         b1.setOnClickListener(new View.OnClickListener() {
@@ -421,4 +441,6 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
             }
         return file;
     }
+
+
 }
