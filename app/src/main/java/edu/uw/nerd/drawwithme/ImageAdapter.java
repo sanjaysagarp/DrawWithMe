@@ -79,6 +79,10 @@ public class ImageAdapter extends BaseAdapter {
         return imageView;
     }
 
+    public void setFileList(File[] files){
+        fileList = files;
+    }
+
     // references to images
 //    File[] fileList = MainActivity.dir.listFiles();
 //    Uri[] uriList = new Uri[fileList.length];

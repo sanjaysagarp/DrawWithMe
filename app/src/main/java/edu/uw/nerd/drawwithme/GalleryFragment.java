@@ -31,6 +31,9 @@ public class GalleryFragment extends Fragment {
     private ImageButton image;
 
     private File dir;
+    private GridView grid;
+    private File[] savedDrawings;
+    private ImageAdapter adapter;
 
     private View view;
 
@@ -59,15 +62,18 @@ public class GalleryFragment extends Fragment {
             }
             dir = root;
 
-            File[] savedDrawings = dir.listFiles();
+            savedDrawings = dir.listFiles();
             //ImageButton image = (ImageButton)view.findViewById(R.id.image_btn);
-            if(savedDrawings.length != 0){
-                Log.v(TAG, savedDrawings[savedDrawings.length-1].toString());
-                image.setImageURI(Uri.parse(savedDrawings[savedDrawings.length-1].getAbsolutePath()));
-            }
-            else{
-                image.setBackgroundColor(Color.BLUE);
-            }
+//            if(savedDrawings.length != 0){
+//                Log.v(TAG, savedDrawings[savedDrawings.length-1].toString());
+//                image.setImageURI(Uri.parse(savedDrawings[savedDrawings.length-1].getAbsolutePath()));
+//            }
+//            else{
+//                image.setBackgroundColor(Color.BLUE);
+//            }
+
+            adapter.setFileList(savedDrawings);
+
         }
         super.onResume();
     }
@@ -76,7 +82,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_gallery, container, false);
-        GridView grid = (GridView)view.findViewById(R.id.grid_gallery);
+        grid = (GridView)view.findViewById(R.id.grid_gallery);
 
         dir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         dir = new File(dir, "Draw With Me");
@@ -84,19 +90,20 @@ public class GalleryFragment extends Fragment {
             dir.mkdirs();
         }
 
-        final File[] savedDrawings = dir.listFiles();
-        image = (ImageButton)view.findViewById(R.id.image_btn);
-        if(savedDrawings.length != 0){
-            Log.v(TAG, savedDrawings[0].toString());
-            image.setImageURI(Uri.parse(savedDrawings[0].getAbsolutePath()));
-        }
-        else{
-            image.setBackgroundColor(Color.BLUE);
-        }
+        savedDrawings = dir.listFiles();
+//        image = (ImageButton)view.findViewById(R.id.image_btn);
+//        if(savedDrawings.length != 0){
+//            Log.v(TAG, savedDrawings[0].toString());
+//            image.setImageURI(Uri.parse(savedDrawings[0].getAbsolutePath()));
+//        }
+//        else{
+//            image.setBackgroundColor(Color.BLUE);
+//        }
 
 
 
-        grid.setAdapter(new ImageAdapter(container.getContext(), savedDrawings));
+        adapter = new ImageAdapter(container.getContext(), savedDrawings);
+        grid.setAdapter(adapter);
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,

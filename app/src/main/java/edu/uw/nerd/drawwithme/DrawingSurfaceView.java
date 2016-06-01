@@ -2,9 +2,11 @@ package edu.uw.nerd.drawwithme;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -125,8 +127,12 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public synchronized void render(Canvas canvas){
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
-
-        canvas.drawColor(defaultBackground); //white out the background
+        if(getBackground()!=null){
+            canvas.drawBitmap(((BitmapDrawable)getBackground()).getBitmap(), 0, 0, null);
+        }
+        else {
+            canvas.drawColor(defaultBackground); //white out the background
+        }
         //need to redraw all previous points
         drawing = callback.getDrawing();
         for(int i = 0; i < drawing.size(); i++) {
