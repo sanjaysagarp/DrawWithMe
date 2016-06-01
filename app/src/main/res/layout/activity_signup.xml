@@ -31,8 +31,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Sign up"
+        android:text="SIGN UP!"
         android:id="@+id/signup1"
+        android:background="#FF4181"
+        android:textColor="#FFFFFF"
         android:layout_marginTop="49dp"
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true" />

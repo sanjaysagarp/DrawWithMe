@@ -30,6 +30,7 @@ import com.android.colorpicker.ColorPickerSwatch;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
             try {
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(new File(backgroundImage)));
                 view.setBmp(b);
+                ((EditText)findViewById(R.id.title)).setText((new File(backgroundImage)).getName());
 //                Drawable drawable = new BitmapDrawable(getResources(), b);
 //                view.setBackground(drawable);
             }
@@ -154,15 +156,6 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
             case R.id.menu_save:
                 saveCanvas();
                 return true;
-            case R.id.menu_load:
-                File[] current = dir.listFiles();
-                if (current.length != 0) {
-                    Log.v(TAG, current[current.length - 1].getName());
-                    ImageView image = (ImageView) findViewById(R.id.test);
-                    image.setImageURI(Uri.parse(current[current.length - 1].getAbsolutePath()));
-
-                }
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -176,8 +169,16 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         if (isExternalStorageWriteable()) {
             try {
                 Log.v(TAG, "Saving.. hopefully.." + dir.getAbsolutePath());
-                String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                File file = new File(dir, "drawing_" + timestamp);
+                String title = ((EditText)findViewById(R.id.title)).getText().toString();
+                File file;
+                if(title == null) {
+                    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    file = new File(dir, "drawing_" + timestamp);
+                }
+                else{
+                    file = new File(dir, title);
+                }
+
                 file.createNewFile();
 
                 drawingUri = Uri.fromFile(file);

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -66,7 +67,11 @@ public class DetailActivity extends AppCompatActivity {
             img.setImageResource(image);
         }
         else{
-            img.setImageURI(Uri.parse(file.getAbsolutePath()));
+            if(file!=null) {
+                img.setImageURI(Uri.parse(file.getAbsolutePath()));
+                TextView text = (TextView)findViewById(R.id.title_text);
+                text.setText(file.getName());
+            }
         }
 
     }

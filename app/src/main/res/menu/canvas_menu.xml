@@ -7,11 +7,6 @@
         app:showAsAction="always"
         />
 
-    <item
-        android:id="@+id/menu_load"
-        android:title="LOAD"
-        app:showAsAction="always"
-        />
 
     <item
         android:id="@+id/send_btn"

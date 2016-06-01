@@ -36,12 +36,24 @@
         android:layout_alignTop="@+id/signin"
         android:layout_alignRight="@+id/loginEmail"
         android:layout_alignEnd="@+id/loginEmail" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account?"
+        android:layout_above="@id/signup"
+        android:layout_alignLeft="@id/signup"
+        android:textColor="#527b94"
+        android:textSize="10sp"
+        />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign in"
         android:layout_marginTop="59dp"
         android:id="@+id/signin"
+        android:background="#FF4181"
+        android:textColor="#FFFFFF"
         android:layout_below="@+id/loginPassword"
         android:layout_alignLeft="@+id/loginPassword"
         android:layout_alignStart="@+id/loginPassword" />
