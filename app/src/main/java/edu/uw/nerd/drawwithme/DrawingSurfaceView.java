@@ -35,7 +35,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public float[] floatArray;
     public Paint defaultPaint;
     public int defaultBackground;
-    public int width;
+    public int width = 3;
     public boolean imageLoaded;
 
     public getDrawing callback;
