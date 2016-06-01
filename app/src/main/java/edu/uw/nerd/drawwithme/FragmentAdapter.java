@@ -104,7 +104,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         return POSITION_NONE;
     }
 
-    @Override
+   /* @Override
     public Object instantiateItem(ViewGroup container, int position) {
         List<Fragment> fragmentsList = mFragmentManager.getFragments();
         if (fragmentsList != null && position <= (fragmentsList.size() - 1)) {
@@ -121,11 +121,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         }
 
         return super.instantiateItem(container, position);
-    }
-
-
-        return super.instantiateItem(container, position);
-    }
+    }*/
 
 
     @Override

@@ -204,6 +204,12 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 //FirebaseDatabase database = FirebaseDatabase.getInstance();
                 showDialog();
                 return true;
+            case R.id.share_btn:
+                String URL = "default";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.putExtra("sms_body", "Hey there! Check out what I made with my DrawWithMe app: " + URL);
+                i.setType("vnd.android-dir/mms-sms");
+                startActivityForResult(i, 0);
             default:
                 return super.onOptionsItemSelected(item);
         }
