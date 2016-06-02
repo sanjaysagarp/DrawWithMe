@@ -104,14 +104,14 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         return POSITION_NONE;
     }
 
-    @Override
+   /* @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
 
 
-        return super.instantiateItem(container, position);
-    }
 
+        return super.instantiateItem(container, position);
+    }*/
 
     @Override
     public void notifyDataSetChanged() {

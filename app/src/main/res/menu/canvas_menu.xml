@@ -10,11 +10,12 @@
 
     <item
         android:id="@+id/send_btn"
-        android:title="Send"
-        app:showAsAction="ifRoom"/>
+        android:title="SEND"
+        app:showAsAction="always"/>
 
     <item
-        android:id="@+id/back_btn"
-        android:title="Back"
+        android:id="@+id/share_btn"
+        android:title="SHARE WITH SMS"
         app:showAsAction="ifRoom"/>
+
 </menu>
