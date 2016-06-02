@@ -115,6 +115,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 }
                 // have some sort of call here right after the data updates
+                fragmentAdapter.get
                 fragmentAdapter.notifyDataSetChanged();
             }
 

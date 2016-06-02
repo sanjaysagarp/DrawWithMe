@@ -100,6 +100,10 @@ public class InboxFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     private class ImageTask extends AsyncTask<List<String>, Void, List<Bitmap>> {
 
