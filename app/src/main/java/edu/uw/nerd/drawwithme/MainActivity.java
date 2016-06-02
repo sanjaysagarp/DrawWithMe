@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-                String URL = "http://i.imgur.com/I5yPFUD.jpg";
+                String URL = "http://i.imgur.com/S6nFtHM.jpg";
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 String recipient = edt.getText().toString();
                 Log.v(TAG,user.getUid());

@@ -29,8 +29,11 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     public static final String TAG = "FRAG_ADAPTER";
     private String tabTitles[] = new String[] { "Gallery", "Inbox"};
+
     public FirebaseAuth mAuth;
     public FirebaseDatabase database;
+
+    private FragmentManager fragManager;
 
     private Context context;
     private List<String> newMsg;
@@ -38,48 +41,14 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     public FragmentAdapter(FragmentManager fm, Context context) {
         super(fm);
+
+        fragManager = fm;
+
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         newMsg = new ArrayList<String>();
 
-
-        childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-
-                // A new comment has been added, add it to the displayed list
-                DrawingItem drawingItem = dataSnapshot.getValue(DrawingItem.class);
-
-//                for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-//                    DrawingItem message = messageSnapshot.getValue(DrawingItem.class);
-//                    Log.v(TAG, message.sender);
-//                    newMsg.add(message.url);
-//                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-            }
-        };
     }
 
     @Override
@@ -89,12 +58,30 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
+        Log.v(TAG, "GET ITEM CALLED...");
         if (position == 0) {
             return GalleryFragment.newInstance(position + 1);
         } else {
+            Log.v(TAG, "NEW INBOXFRAG CALLED...");
+
             Log.v(TAG, HomeActivity.allMsg.toString());
-            return InboxFragment.newInstance(HomeActivity.dir, HomeActivity.allMsg);
+            return InboxFragment.newInstance(HomeActivity.dir, newMsg);
+        }
+    }
+
+    public void update(List<String> updatedMsgs) {
+        List<Fragment> ls = fragManager.getFragments();
+        if (ls != null) {
+            InboxFragment inbox = (InboxFragment) ls.get(0);
+
+            if (inbox != null) {
+                Log.v(TAG, "updating... so executes");
+                newMsg.clear();
+                for (int i = 0; i < updatedMsgs.size(); i++) {
+                    newMsg.add(updatedMsgs.get(i));
+                }
+                inbox.update(newMsg);
+            }
         }
     }
 
@@ -107,10 +94,6 @@ public class FragmentAdapter extends FragmentPagerAdapter {
    /* @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
-
-
-
-        return super.instantiateItem(container, position);
     }*/
 
     @Override

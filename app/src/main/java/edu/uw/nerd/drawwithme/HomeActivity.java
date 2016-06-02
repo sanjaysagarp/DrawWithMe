@@ -107,15 +107,15 @@ public class HomeActivity extends AppCompatActivity {
                     Log.v(TAG, message.sender);
 
                     //TODO: DATA IS RETRIEVED HERE AND NEEDS TO POPULATE INBOX
-//                    allMsg.add(message.url);
-                    allMsg.add("https://api.imgur.com/3/image/I5yPFUD");
+                    allMsg.add(message.url);
+                    //allMsg.add("https://api.imgur.com/3/image/I5yPFUD");
 
                     Log.v(TAG, message.url);
 
 
                 }
                 // have some sort of call here right after the data updates
-                fragmentAdapter.get
+                fragmentAdapter.update(allMsg);
                 fragmentAdapter.notifyDataSetChanged();
             }
 

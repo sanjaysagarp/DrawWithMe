@@ -41,6 +41,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -65,9 +66,6 @@ public class InboxFragment extends Fragment {
                 args.putSerializable(INBOX_MSG + i, msgs.get(i));
             }
         }
-
-        Log.v(TAG, INBOX_MSG + "0");
-
         InboxFragment fragment = new InboxFragment();
         fragment.setArguments(args);
         return fragment;
@@ -86,18 +84,20 @@ public class InboxFragment extends Fragment {
 
         dir = (File)getArguments().get(INBOX_PAGE);
 
-        List<String> temp = new ArrayList<>();
-
-        for (int i = 0; i < getArguments().size() - 1; i++) {
-            temp.add((String)getArguments().get(INBOX_MSG + i));
-        }
-
-        ImageTask imgTask = new ImageTask();
-        Log.v(TAG, temp.toString());
-        imgTask.execute(temp);
-
-
         return rootView;
+    }
+
+    public void update(List<String> ls) {
+        ImageTask imgTask = new ImageTask();
+        for (int i = 0; i < ls.size(); i++) {
+            String imgID = ls.remove(i);
+            String[] imgSplit = imgID.split("/");
+            imgSplit = imgSplit[imgSplit.length - 1].trim().split("\\.");
+            imgID = "https://api.imgur.com/3/image/" + imgSplit[0];
+            ls.add(i, imgID);
+        }
+        imgTask.execute(ls);
+
     }
 
     @Override
@@ -119,8 +119,8 @@ public class InboxFragment extends Fragment {
 
             try {
                 for (int i = 0; i < params[0].size(); i++) {
-                    URL url = new URL(params[0].get(i));
-                    Log.v(TAG, "inside async " + url.toString());
+                    String imgID = params[0].get(i);
+                    URL url = new URL(imgID);
 
                     // attempt to connect to the url
                     urlConnection = (HttpURLConnection) url.openConnection();
@@ -134,7 +134,6 @@ public class InboxFragment extends Fragment {
                     if (inputStream == null) {
                         return null;
                     }
-
 
                     StringBuffer buffer = new StringBuffer();
                     reader = new BufferedReader(new InputStreamReader((inputStream)));
@@ -155,12 +154,10 @@ public class InboxFragment extends Fragment {
                     try {
                         // finds the url in the given json and add it onto list of url images
                         String resultParsed = new JSONObject(results).getJSONObject("data").getString("link");
-                        Log.v("did i ?", resultParsed.toString());
 
                         URL imgLink = new URL(resultParsed);
                         Bitmap img = BitmapFactory.decodeStream(imgLink.openConnection().getInputStream());
                         images.add(img);
-
                     } catch (JSONException jsonEx) {
                         Log.v("ERROR", jsonEx.toString());
                     }
@@ -186,7 +183,6 @@ public class InboxFragment extends Fragment {
                     }
                 }
             }
-
             return images;
         }
 
@@ -198,30 +194,27 @@ public class InboxFragment extends Fragment {
             for(File f : dir.listFiles()) f.delete();
 
             // take each string url of images and display em on the grid here
-            Log.v("bmp list: ", result.toString());
             GridView grid = (GridView) getActivity().findViewById(R.id.gridview);
-            for(File f : dir.listFiles()) f.delete();
-
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
             try {
-
                 // show loop through and do it for all
-                OutputStream out = null;
+
                 for (int i = 0; i < result.size(); i++) {
-                    File file = new File(dir, "drawing_" + timestamp);
+                    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + i;
+                    File file = new File(dir, "saved_" + timestamp);
                     file.createNewFile();
+                    OutputStream out = null;
                     out = new BufferedOutputStream(new FileOutputStream(file));
 
                     result.get(i).compress(Bitmap.CompressFormat.PNG, 100, out);
-                }
-                if (out != null) {
                     out.close();
                 }
+                //if (out != null) {
+                    // out.close();
+                //}
             } catch (IOException e) {
                 Log.w(TAG, e);
             }
-
 
             final File[] fileList = dir.listFiles();
 
@@ -230,7 +223,6 @@ public class InboxFragment extends Fragment {
             grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-                    Log.v("TESTING", "image has been clicked");
                     Intent intent = new Intent(getActivity(), DetailActivity.class);
                     intent.putExtra(DETAIL_INTENT, fileList[position]);
                     startActivity(intent);

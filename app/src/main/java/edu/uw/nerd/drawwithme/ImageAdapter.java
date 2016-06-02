@@ -72,7 +72,8 @@ public class ImageAdapter extends BaseAdapter {
         if(uriList != null) {
             imageView.setImageResource(uriList[position]);
         }
-        else{
+        else {
+            Log.v(TAG, Uri.parse(fileList[position].getAbsolutePath()).toString());
             imageView.setImageURI(Uri.parse(fileList[position].getAbsolutePath()));
         }
 //        imageView.setImageURI(uriList[position]);
@@ -82,10 +83,4 @@ public class ImageAdapter extends BaseAdapter {
     public void setFileList(File[] files){
         fileList = files;
     }
-
-    // references to images
-//    File[] fileList = MainActivity.dir.listFiles();
-//    Uri[] uriList = new Uri[fileList.length];
-
-//    private Integer[] mThumbIds = MainActivity.dir.listFiles();
 }
