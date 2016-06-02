@@ -93,7 +93,6 @@ public class PostTask extends AsyncTask<Bitmap, Void, String> {
             }
 
             imageLink = buffer.toString();
-            Log.v(TAG, imageLink);
 
             try {
                 // finds the url in the given json and add it onto list of url images

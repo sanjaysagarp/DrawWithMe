@@ -238,22 +238,25 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 try {
                     String URL = upload.execute(view.getBmp()).get();
+                    if (URL == null) {
+                        Toast.makeText(MainActivity.this, "Unable to send. Please try again later", Toast.LENGTH_LONG).show();
+                    } else {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        String recipient = edt.getText().toString();
+                        Log.v(TAG, user.getUid());
 
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    String recipient = edt.getText().toString();
-                    Log.v(TAG, user.getUid());
+                        DrawingItem item = new DrawingItem(user.getUid(), edt.getText().toString(), title.getText().toString(), URL);
 
-                    DrawingItem item = new DrawingItem(user.getUid(), edt.getText().toString(), title.getText().toString(), URL);
+                        String key = database.getReference().child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
+                        Map<String, Object> postValues = item.toMap();
 
-                    String key = database.getReference().child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
-                    Map<String, Object> postValues = item.toMap();
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("/inbox/" + key, postValues);
 
-                    Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put("/inbox/" + key, postValues);
+                        database.getReference().updateChildren(childUpdates);
 
-                    database.getReference().updateChildren(childUpdates);
-
-                    Toast.makeText(MainActivity.this, "Sent to " + recipient, Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Sent to " + recipient, Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception e) {
                     Log.v(TAG, e.toString());
                 }

@@ -105,7 +105,6 @@ public class HomeActivity extends AppCompatActivity {
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     DrawingItem message = messageSnapshot.getValue(DrawingItem.class);
 
-                    //TODO: DATA IS RETRIEVED HERE AND NEEDS TO POPULATE INBOX
                     allMsg.add(message.url);
                     Log.v(TAG, "testing " + message.url);
                 }
