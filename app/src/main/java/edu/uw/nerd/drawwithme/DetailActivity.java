@@ -24,22 +24,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // TODO: ideally should be Uri but issue with DrawingSurfaceView results in temp files...
-//        Uri image = null;
-//        if (savedInstanceState == null) {
-//            Bundle extras = getIntent().getExtras();
-//            if(extras == null) {
-//                image = null;
-//            } else {
-//                image = (Uri) extras.get(InboxFragment.DETAIL_INTENT);
-//            }
-//        } else {
-//            image = (Uri) savedInstanceState.getSerializable(InboxFragment.DETAIL_INTENT);
-//        }
-//
-//        ImageView img = (ImageView) findViewById(R.id.drawing_detail);
-//        img.setImageURI(image);
-
         image = null;
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();

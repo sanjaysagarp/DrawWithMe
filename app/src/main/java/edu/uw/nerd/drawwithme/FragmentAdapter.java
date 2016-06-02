@@ -58,24 +58,20 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.v(TAG, "GET ITEM CALLED...");
         if (position == 0) {
             return GalleryFragment.newInstance(position + 1);
         } else {
-            Log.v(TAG, "NEW INBOXFRAG CALLED...");
-
-            Log.v(TAG, HomeActivity.allMsg.toString());
             return InboxFragment.newInstance(HomeActivity.dir, newMsg);
         }
     }
 
+    // updates the content of the inbox with new inputs when changed
     public void update(List<String> updatedMsgs) {
         List<Fragment> ls = fragManager.getFragments();
         if (ls != null) {
             InboxFragment inbox = (InboxFragment) ls.get(0);
 
             if (inbox != null) {
-                Log.v(TAG, "updating... so executes");
                 newMsg.clear();
                 for (int i = 0; i < updatedMsgs.size(); i++) {
                     newMsg.add(updatedMsgs.get(i));
@@ -85,16 +81,10 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         }
     }
 
-
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
-
-   /* @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-
-    }*/
 
     @Override
     public void notifyDataSetChanged() {

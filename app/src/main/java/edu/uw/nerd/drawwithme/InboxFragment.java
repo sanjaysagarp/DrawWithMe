@@ -66,6 +66,7 @@ public class InboxFragment extends Fragment {
                 args.putSerializable(INBOX_MSG + i, msgs.get(i));
             }
         }
+
         InboxFragment fragment = new InboxFragment();
         fragment.setArguments(args);
         return fragment;
@@ -108,7 +109,6 @@ public class InboxFragment extends Fragment {
     private class ImageTask extends AsyncTask<List<String>, Void, List<Bitmap>> {
 
         public static final String CLIENT_ID = "76c244ffc9d4c9c";
-        public static final String CLIENT_SECRET = "8dde9266ec353e305169e658957c68099ec229d2";
 
         @Override
         protected List<Bitmap> doInBackground(List<String>... params) {
@@ -198,20 +198,17 @@ public class InboxFragment extends Fragment {
 
             try {
                 // show loop through and do it for all
-
+                OutputStream out = null;
                 for (int i = 0; i < result.size(); i++) {
                     String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + i;
                     File file = new File(dir, "saved_" + timestamp);
                     file.createNewFile();
-                    OutputStream out = null;
                     out = new BufferedOutputStream(new FileOutputStream(file));
 
                     result.get(i).compress(Bitmap.CompressFormat.PNG, 100, out);
                     out.close();
                 }
-                //if (out != null) {
-                    // out.close();
-                //}
+
             } catch (IOException e) {
                 Log.w(TAG, e);
             }

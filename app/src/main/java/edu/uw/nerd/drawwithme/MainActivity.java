@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.FragmentManager;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     public static File dir;
+    private PostTask upload;
+
+    private String lastUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mAuth = FirebaseAuth.getInstance();
+        upload = new PostTask();
+
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -101,13 +107,6 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 }
             }
         };
-
-//        dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File root = new File(dir, "Draw With Me");
-//        if(!root.exists()){
-//            root.mkdirs();
-//        }
-//        dir = root;
 
         String backgroundImage = null;
         if (savedInstanceState == null) {
@@ -205,11 +204,19 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 showDialog();
                 return true;
             case R.id.share_btn:
-                String URL = "default";
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                i.putExtra("sms_body", "Hey there! Check out what I made with my DrawWithMe app: " + URL);
-                i.setType("vnd.android-dir/mms-sms");
-                startActivityForResult(i, 0);
+                try {
+                    String URL = lastUpload;
+                    i.putExtra("sms_body", "Hey there! Check out what I made with my DrawWithMe app: " + URL);
+                    i.setType("vnd.android-dir/mms-sms");
+                    try {
+                        startActivityForResult(i, 0);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(MainActivity.this, "No app available", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Log.v(TAG, e.toString());
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -228,36 +235,31 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         dialogBuilder.setTitle("Send your image!");
         dialogBuilder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //do something with edt.getText().toString();
-                //TODO: NEED TO CHECK IF EMAIL EXISTS IN DB?
-                //TODO: NEED TO UPLOAD TO IMGUR AND SET URL
                 user = FirebaseAuth.getInstance().getCurrentUser();
+                try {
+                    String URL = upload.execute(view.getBmp()).get();
 
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    String recipient = edt.getText().toString();
+                    Log.v(TAG, user.getUid());
 
-                String URL = "http://i.imgur.com/S6nFtHM.jpg";
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                String recipient = edt.getText().toString();
-                Log.v(TAG,user.getUid());
+                    DrawingItem item = new DrawingItem(user.getUid(), edt.getText().toString(), title.getText().toString(), URL);
 
+                    String key = database.getReference().child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
+                    Map<String, Object> postValues = item.toMap();
 
-                // chang here when getting stuffzzzzzzzzzzzzz. put URL
-                DrawingItem item = new DrawingItem(user.getUid(), edt.getText().toString(), title.getText().toString(), URL);
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("/inbox/" + key, postValues);
 
-                // getref is top level in database, the url
-                // push is creating new id into the given child(inbox)
-                // getkey returns that input id
+                    database.getReference().updateChildren(childUpdates);
 
-                String key = database.getReference().child("inbox").push().getKey(); //pushes to [recipient_email]/inbox/[unique_id]/[DrawingItem]
-                Map<String, Object> postValues = item.toMap();
-
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/inbox/"+ key, postValues);
-//
-                database.getReference().updateChildren(childUpdates);
-
-                Toast.makeText(MainActivity.this, "Sent to " + recipient, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Sent to " + recipient, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Log.v(TAG, e.toString());
+                }
             }
         });
+
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //pass
@@ -266,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
         AlertDialog b = dialogBuilder.create();
         b.show();
     }
+
     private Uri drawingUri;
 
     //helper method for saving the current drawing
@@ -301,9 +304,6 @@ public class MainActivity extends AppCompatActivity implements DrawingSurfaceVie
                 Log.d(TAG, Log.getStackTraceString(io));
             }
 
-
-            //set image to the picture
-            //imageView.setImageURI(pictureUri);
         }
         Toast.makeText(this, "Drawing saved!", Toast.LENGTH_SHORT ).show();
         Intent i = new Intent(MainActivity.this, HomeActivity.class);

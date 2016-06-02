@@ -15,16 +15,10 @@ import java.net.URI;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-//    private Uri[] uriList;
     private Integer[] uriList;
     private File[] fileList;
     private String TAG = "ImageAdapter";
 
-//    public ImageAdapter(Context c, Uri[] uriList) {
-//        mContext = c;
-//        this.uriList = uriList;
-//
-//    }
     public ImageAdapter(Context c, Integer[] uriList) {
         mContext = c;
         this.uriList = uriList;
@@ -73,7 +67,6 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setImageResource(uriList[position]);
         }
         else {
-            Log.v(TAG, Uri.parse(fileList[position].getAbsolutePath()).toString());
             imageView.setImageURI(Uri.parse(fileList[position].getAbsolutePath()));
         }
 //        imageView.setImageURI(uriList[position]);
